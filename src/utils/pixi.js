@@ -1,6 +1,8 @@
 import { Point, ObservablePoint } from 'pixi.js'
 import invariant from '../utils/invariant'
 import isNil from 'lodash.isnil'
+import { degreesToRadians } from '../helpers'
+import { getContexts } from './css'
 
 /**
  * Parse PIXI point value to array of coordinates
@@ -126,7 +128,20 @@ export function setValue(instance, prop, value) {
 
     instance[prop].set(coordinates.shift(), coordinates.shift())
   } else {
-    // just hard assign value
-    instance[prop] = value
+    const context = getContexts()[prop]
+    if (context && instance[context]) {
+      const axis =
+        prop
+          .charAt(prop.length - 1)
+          .toLowerCase()
+          .indexOf('x') !== -1
+          ? 'x'
+          : 'y'
+      instance[context][axis] = context === 'skew' ? degreesToRadians(value) : value
+    } else if (prop === 'rotation') {
+      instance[prop] = degreesToRadians(value)
+    } else {
+      instance[prop] = value
+    }
   }
 }

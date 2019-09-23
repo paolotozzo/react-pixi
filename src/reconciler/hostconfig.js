@@ -10,6 +10,7 @@
 
 import performanceNow from 'performance-now'
 import invariant from '../utils/invariant'
+import cssManager from '../cssManager/cssManager'
 import { createElement } from '../utils/element'
 import { CHILDREN, applyDefaultProps } from '../utils/props'
 
@@ -244,13 +245,24 @@ const HostConfig = {
     return res
   },
 
-  commitUpdate(instance, updatePayload, type, oldProps, newProps) {
+  commitUpdate(instance, updatePayload, type, oldProps, { className, ...newProps }) {
     let applyProps = instance && instance.applyProps
+    let cssProps
+    let cssMan = instance.cssManager
+    if (className && !cssMan) {
+      cssMan = cssManager(instance, type, applyDefaultProps)
+      instance.cssManager = cssMan
+    }
     if (typeof applyProps !== 'function') {
       applyProps = applyDefaultProps
     }
 
-    const changed = applyProps(instance, oldProps, newProps)
+    if (cssMan) {
+      cssMan.setProps(newProps)
+      cssProps = cssMan.setCSSProps(className, true, newProps)
+    }
+    
+    const changed = applyProps(instance, oldProps, cssMan ? cssProps : newProps)
     if (changed || prepareChanged) {
       window.dispatchEvent(new CustomEvent(`__REACT_PIXI_REQUEST_RENDER__`, { detail: 'commitUpdate' }))
     }

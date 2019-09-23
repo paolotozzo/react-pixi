@@ -1,5 +1,6 @@
 import invariant from '../utils/invariant'
 import { applyDefaultProps } from './props'
+import cssManager from '../cssManager/cssManager'
 import * as components from '../components'
 
 /**
@@ -19,6 +20,7 @@ export const TYPES = {
   TilingSprite: 'TilingSprite',
   SimpleMesh: 'SimpleMesh',
   SimpleRope: 'SimpleRope',
+  Spine: 'Spine',
 }
 
 const ELEMENTS = Object.keys(TYPES).reduce((elements, type) => ({ ...elements, [type]: components[type] }), {})
@@ -38,12 +40,12 @@ export const TYPES_INJECTED = {}
  * @param {Object} props Component props
  * @param {Object} root Root instance
  */
-export function createElement(type, props = {}, root = null) {
+export function createElement(type, { className, ...props } = {}, root = null) {
   const fn = ELEMENTS[type]
-
   let instance
   let applyProps
-
+  let cssProps
+  let cssMan
   if (typeof fn === 'function') {
     instance = fn(root, props)
   }
@@ -62,8 +64,16 @@ export function createElement(type, props = {}, root = null) {
 
   // apply initial props!
   if (instance) {
+
+    if (className) {
+      cssMan = cssManager(instance, type, applyDefaultProps)
+      instance.cssManager = cssMan
+      cssMan.setProps(props)
+      cssProps = cssMan.setCSSProps(className, null, props)
+    }
+    
     applyProps = typeof instance?.applyProps === 'function' ? instance.applyProps : applyDefaultProps
-    applyProps(instance, {}, props)
+    applyProps(instance, {}, className ? cssProps : props)
   }
 
   return instance

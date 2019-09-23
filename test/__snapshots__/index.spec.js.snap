@@ -106,6 +106,8 @@ Object {
   },
   "SimpleMesh": "SimpleMesh",
   "SimpleRope": "SimpleRope",
+  "Spine": "Spine",
+  "SpineContainer": [Function],
   "Sprite": "Sprite",
   "Stage": [Function],
   "Text": "Text",

@@ -1,9 +1,22 @@
 import * as PIXI from 'pixi.js'
 import { createElement, TYPES, TYPES_INJECTED, PixiComponent } from '../src/utils/element'
-
+import cssManager from '../src/cssManager/cssManager'
+import * as propsUtils from '../src/utils/props';
 import { emptyTexture } from './__fixtures__/textures'
 import { desyrel } from './__fixtures__/bitmapfonts'
 import parseBitmapFont from './__utils__/parseBitmapFont'
+
+jest.mock('../src/cssManager/cssManager');
+
+
+cssManager.mockImplementation(() => {
+  return {
+    setCSSProps: jest.fn().mockReturnValue({}),
+    getCSSProps: jest.fn(),
+    setProps: jest.fn(),
+  }
+});
+
 
 parseBitmapFont(desyrel)
 
@@ -77,6 +90,54 @@ describe('createElement', () => {
     })
     expect(element).toBeInstanceOf(PIXI.SimpleRope)
   })
+
+  test('create Spine with autoplay', () => {
+    const spineElementMock = {
+      getSpineObject: jest.fn().mockReturnValue(new PIXI.Container()),
+      play: jest.fn()
+    }
+
+    const spy1 = jest.spyOn(spineElementMock, 'getSpineObject')
+    const spy2 = jest.spyOn(spineElementMock, 'play')
+
+    const element = createElement(
+      TYPES.Spine,
+      {
+        spineElement: spineElementMock
+      }
+    )
+
+    expect(element).toBeInstanceOf(PIXI.Container)
+    expect(spy1).toHaveBeenCalled()
+    expect(spy2).toHaveBeenCalled()
+
+  })
+
+
+test('create Spine without autoplay', () => {
+    const spineElementMock = {
+      getSpineObject: jest.fn().mockReturnValue(new PIXI.Container()),
+      play: jest.fn()
+    }
+
+    const spy1 = jest.spyOn(spineElementMock, 'getSpineObject')
+    const spy2 = jest.spyOn(spineElementMock, 'play')
+
+    const element = createElement(
+      TYPES.Spine,
+      {
+        autoPlay: false,
+        spineElement: spineElementMock
+      }
+    )
+    const spy3 = jest.spyOn(element, 'addChild')
+    expect(element).toBeInstanceOf(PIXI.Container)
+    expect(spy1).toHaveBeenCalled()
+    expect(spy2).not.toHaveBeenCalled()
+
+  })
+
+
 
   test('get undefined', () => {
     expect(createElement('INVALID')).toBeUndefined()
@@ -268,6 +329,31 @@ describe('element.applyProps', () => {
     expect(applied).toBeFalsy()
     expect(draw2).toHaveBeenCalledTimes(1)
   })
+})
+
+describe ('Use of cssManager', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  })
+  test('cssManager should be defined for the element', () => {
+    const element = createElement(TYPES.Container, { className: 'btn'})
+    expect(element).toHaveProperty('cssManager')
+    expect(cssManager).toHaveBeenCalled()
+  })
+  test('setProps and setCSSProps should be called', () => {
+    const element = createElement(TYPES.Container, { className: 'btn', x: 0, y: 0 })
+    const spy1 = jest.spyOn(element.cssManager, 'setProps')
+    const spy2 = jest.spyOn(element.cssManager, 'setCSSProps')
+    expect(spy1).toHaveBeenCalledWith({x: 0, y: 0});
+    expect(spy2).toHaveBeenCalledWith('btn', null, {'x': 0, 'y': 0});
+  })
+
+  test('applyProps should be called', () => {
+    propsUtils.applyDefaultProps = jest.fn();
+    const element = createElement(TYPES.Container, { className: 'btn', x: 0, y: 0 })
+    expect(propsUtils.applyDefaultProps).toHaveBeenCalled();
+  })
+
 })
 
 describe('PixiComponent', () => {

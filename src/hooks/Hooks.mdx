@@ -12,7 +12,7 @@ React Pixi now support [React hooks](https://reactjs.org/docs/hooks-reference.ht
 Access the `PIXI.Application` in your component
 
 ```jsx
-import { useApp } from '@inlet/react-pixi'
+import { useApp } from '@paolotozzo/react-pixi'
 
 function MyComponent () {
   const app = useApp()
@@ -29,7 +29,7 @@ function MyComponent () {
 Bind listener to the `PIXI.Application` ticker event
 
 ```jsx
-import { useTick } from '@inlet/react-pixi'
+import { useTick } from '@paolotozzo/react-pixi'
 
 function MyComponent () {
   useTick(delta => {
@@ -41,14 +41,3 @@ function MyComponent () {
   )
 }
 ```
-
-Example:
-
-<iframe
-  height={500}
-  scrolling="no"
-  title="useTick"
-  src="//codepen.io/inlet/embed/EOMBer/?height=300&theme-id=33987&default-tab=result&embed-version=2"
-  frameBorder="no"
-  allowFullScreen={true}
-  style={{ width: '100%' }} />

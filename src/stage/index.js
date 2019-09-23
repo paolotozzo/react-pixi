@@ -2,6 +2,7 @@ import React from 'react'
 import { Application, Ticker } from 'pixi.js'
 import PropTypes from 'prop-types'
 import invariant from '../utils/invariant'
+import cssSource from '../cssManager/cssSource'
 import { PROPS_DISPLAY_OBJECT } from '../utils/props'
 import { PixiFiber } from '../reconciler'
 import { AppProvider } from './provider'
@@ -111,7 +112,7 @@ class Stage extends React.Component {
 
   componentDidMount() {
     const { onMount, width, height, options, raf, renderOnComponentChange } = this.props
-
+    cssSource.addStyleSheets(document.styleSheets)
     this.app = new Application({
       width,
       height,

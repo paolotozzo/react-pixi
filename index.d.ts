@@ -389,6 +389,19 @@ export const PixiFiber: (
 // stage
 export class Stage extends React.Component<_ReactPixi.IStage> {}
 
+type SpineContainerStatic = {
+  Animation: any;
+}
+
+type SpineContainerInterface<T> = React.ComponentClass<any, any>
+
+export const SpineContainer: SpineContainerInterface<SpineContainerStatic> & {
+  Animation: any;
+  Slot: any;
+  Bone: any;
+}
+
+
 /**
  * Create a Custom PIXI Component
  *
