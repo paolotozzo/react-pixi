@@ -9,11 +9,6 @@ const Spine = (root, props) => {
     spineElement.play()
   }
 
-  container.willUnmount = (instance, child, parent) => {
-    spineElement.destroy()
-    instance.destroy()
-  }
-
   return container
 }
 

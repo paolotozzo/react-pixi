@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { TYPES } from '../utils/element'
+import spineManager from '../utils/spineManager'
 import { Animation, Slot, Bone } from './spineComponent'
 import SpineContext from './spineComponent/SpineContext'
 const { Spine } = TYPES
@@ -48,10 +49,9 @@ class SpineContainer extends Component {
     animations: PropTypes.array,
   }
 
-  constructor(props, context) {
+  constructor(props) {
     super(props)
     const { spineData, autoPlay = true, width, height, events = {}, skin, mixes } = props
-    const { spineManager } = context
     this.spineElement = spineManager(spineData)
     if (this.spineElement) {
       this.spineElement.init({

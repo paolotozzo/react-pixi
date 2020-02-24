@@ -10,15 +10,16 @@ const updateBone = (props, context, childRef) => {
   const bone = skeleton.findBone(name)
 
   Object.keys(rest).forEach(prop => {
-    bone[props] = rest[prop]
+    bone[prop] = rest[prop]
   })
 
   if (childRef.current) {
-    childRef.current.x = Math.abs(bone.x)
-    childRef.current.y = Math.abs(bone.y)
-    childRef.current.scale.x = bone.scaleX
-    childRef.current.scale.y = bone.scaleY
-    childRef.current.rotation = bone.rotation
+    const container = childRef.current.spineElement ? childRef.current.spineElement.getSpineObject() : childRef.current;
+    container.x = Math.abs(bone.x)
+    container.y = Math.abs(bone.y)
+    container.scale.x = bone.scaleX
+    container.scale.y = bone.scaleY
+    container.rotation = bone.rotation
   }
 }
 
