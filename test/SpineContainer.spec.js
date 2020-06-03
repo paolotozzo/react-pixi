@@ -6,9 +6,14 @@ import { createElement, TYPES, TYPES_INJECTED, PixiComponent } from '../src/util
 import SpineContext from '../src/components/spineComponent/SpineContext';
 import SpineContainer from '../src/components/SpineContainer';
 import { Animation, Bone, Slot, SlotContent } from '../src/components/spineComponent';
-import spineData from './__fixtures__/spine';
+import { spineData } from './__fixtures__/spine';
 
 jest.mock('pixi.js', () => {
+    class TextureAtlas {
+      constructor() {
+       
+      }
+    }
     class Spine {
         constructor(spineData) {
             this.spineData = spineData;
@@ -17,7 +22,10 @@ jest.mock('pixi.js', () => {
 
     return {
         spine: {
-            Spine
+          core: {
+            TextureAtlas
+          },
+          Spine
         }
     };
 });
@@ -49,7 +57,6 @@ describe('SpineContainer', () => {
     };
 
     const spineProps = {
-        spineData,
         autoPlay: true,
         width: 200,
         height: 100,
@@ -71,7 +78,7 @@ describe('SpineContainer', () => {
         const spy = jest.spyOn(spineManagerMock, 'init');
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...spineProps} />
+                <SpineContainer {...spineProps} spineData={spineData} />
             </SpineContext.Provider>
         );
         expect(spy).toHaveBeenCalledWith({ autoPlay: true, events: [], height: 100, mixes: [], skin: '', width: 200 });
@@ -82,7 +89,7 @@ describe('SpineContainer', () => {
 
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(false) }}>
-                <SpineContainer {...spineProps} />
+                <SpineContainer {...spineProps} spineData={spineData} />
             </SpineContext.Provider>
         );
         expect(spy).not.toHaveBeenCalled();
@@ -96,7 +103,7 @@ describe('SpineContainer', () => {
 
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...props} />
+                <SpineContainer {...props} spineData={spineData} />
             </SpineContext.Provider>
         );
         expect(spy).toHaveBeenNthCalledWith(1, 'active');
@@ -113,7 +120,7 @@ describe('SpineContainer', () => {
 
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...props} />
+                <SpineContainer {...props} spineData={spineData} />
             </SpineContext.Provider>
         );
         expect(spy1).toHaveBeenNthCalledWith(1, 'active');
@@ -129,12 +136,12 @@ describe('SpineContainer', () => {
         });
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...spineProps} />
+                <SpineContainer {...spineProps} spineData={spineData} />
             </SpineContext.Provider>
         );
         element.update(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...props} />
+                <SpineContainer {...props} spineData={spineData} />
             </SpineContext.Provider>
         );
         expect(spy1).toHaveBeenCalledWith('glowingSkin');
@@ -149,12 +156,12 @@ describe('SpineContainer', () => {
         });
         const element = renderer.create(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...spineProps} />
+                <SpineContainer {...spineProps} spineData={spineData} />
             </SpineContext.Provider>
         );
         element.update(
             <SpineContext.Provider value={{ spineManager: makeSpineManagerMock(spineManagerMock) }}>
-                <SpineContainer {...props} />
+                <SpineContainer {...props} spineData={spineData} />
             </SpineContext.Provider>
         );
 
@@ -446,7 +453,7 @@ describe('Bone', () => {
         );
         expect(spy).toHaveBeenCalled();
         expect(obj.y).toBe(10);
-        expect(obj.x).toBe(10);
+        expect(obj.x).toBe(2);
         expect(obj.scale.y).toBe(1);
         expect(obj.scale.x).toBe(1);
         expect(obj.rotation).toBe(10);

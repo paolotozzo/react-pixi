@@ -23,6 +23,7 @@ const spineManager = spineData => {
   const generateEmptyAtlas = data => {
     const { skins } = data
     const allTextures = {}
+
     const atlas = new PixiSpine.core.TextureAtlas()
     Object.keys(skins.default).forEach(attachment => {
       Object.keys(skins.default[attachment]).forEach(texture => {
@@ -55,6 +56,7 @@ const spineManager = spineData => {
   }
 
   const setUpSpine = () => {
+
     spineObj = new PixiSpine.Spine(
       spineData.version ? spineData : getSpineData(spineData, generateEmptyAtlas(spineData))
     )
