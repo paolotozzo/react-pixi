@@ -261,7 +261,7 @@ const HostConfig = {
       cssMan.setProps(newProps)
       cssProps = cssMan.setCSSProps(className, true, newProps)
     }
-    
+
     const changed = applyProps(instance, oldProps, cssMan ? cssProps : newProps)
     if (changed || prepareChanged) {
       window.dispatchEvent(new CustomEvent(`__REACT_PIXI_REQUEST_RENDER__`, { detail: 'commitUpdate' }))

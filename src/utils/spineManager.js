@@ -56,7 +56,6 @@ const spineManager = spineData => {
   }
 
   const setUpSpine = () => {
-
     spineObj = new PixiSpine.Spine(
       spineData.version ? spineData : getSpineData(spineData, generateEmptyAtlas(spineData))
     )

@@ -14,7 +14,7 @@ const updateBone = (props, context, childRef) => {
   })
 
   if (childRef.current) {
-    const container = childRef.current.spineElement ? childRef.current.spineElement.getSpineObject() : childRef.current;
+    const container = childRef.current.spineElement ? childRef.current.spineElement.getSpineObject() : childRef.current
     container.x = Math.abs(bone.x)
     container.y = Math.abs(bone.y)
     container.scale.x = bone.scaleX

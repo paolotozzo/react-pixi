@@ -64,14 +64,13 @@ export function createElement(type, { className, ...props } = {}, root = null) {
 
   // apply initial props!
   if (instance) {
-
     if (className) {
       cssMan = cssManager(instance, type, applyDefaultProps)
       instance.cssManager = cssMan
       cssMan.setProps(props)
       cssProps = cssMan.setCSSProps(className, null, props)
     }
-    
+
     applyProps = typeof instance?.applyProps === 'function' ? instance.applyProps : applyDefaultProps
     applyProps(instance, {}, className ? cssProps : props)
   }
